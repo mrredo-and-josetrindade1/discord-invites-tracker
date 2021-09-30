@@ -122,9 +122,9 @@ class InvitesTracker extends EventEmitter {
     }
 
     get guilds(): Collection<Snowflake, Guild> {
-        let guilds = this.client.guilds.cache;
-        if (this.options.exemptGuild) guilds = guilds.filter((g) => !this.options.exemptGuild(g));
-        if (this.options.activeGuilds) guilds = guilds.filter((g) => this.options.activeGuilds.includes(g.id));
+        let guilds = this.client.guilds;
+        if (this.options.exemptGuild) guilds = guilds.cache.filter((g) => !this.options.exemptGuild(g));
+        if (this.options.activeGuilds) guilds = guilds.cache.filter((g) => this.options.activeGuilds.includes(g.id));
         return guilds;
     }
 
@@ -207,7 +207,7 @@ class InvitesTracker extends EventEmitter {
     }
 
     public async fetchCache() {
-        const fetchGuildCachePromises = (await this.client.guilds.fetch()).map(guild => this.fetchGuildCache(guild));
+        const fetchGuildCachePromises = (await this.client.guilds.cache.fetch()).map(guild => this.fetchGuildCache(guild));
         await Promise.all(fetchGuildCachePromises);
     }
 
