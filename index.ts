@@ -155,7 +155,7 @@ class InvitesTracker extends EventEmitter {
         if (!this.guilds.has(member.guild.id)) return;
 
         // Récupération des nouvelles invitations
-        const currentInvites = await member.guild.invites.fetch().catch(() => {});
+        const currentInvites = await member.guild.fetchInvites().catch(() => {});
         if (!currentInvites) {
             // Si les invitations n'ont pas pu être récupérées
             this.emit('guildMemberAdd', member, 'permissions', null);
@@ -197,7 +197,7 @@ class InvitesTracker extends EventEmitter {
         return new Promise((resolve) => {
             if (this.invitesCache.has(guild.id) && useCache) resolve();
             if (guild.me.permissions.has('MANAGE_GUILD')) {
-                guild.invites.fetch().then((invites) => {
+                guild.fetchInvites().then((invites) => {
                     this.invitesCache.set(guild.id, invites);
                     this.invitesCacheUpdates.set(guild.id, Date.now());
                     resolve();
